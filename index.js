@@ -1,34 +1,52 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const handler = require('./handler');
+
 const app = express();
 
+const adminRoute = express.Router();
 
-// app.use(express.text());
-/**
- * app.use(express.raw()) through this we can get text from client
- * app.use(express.json()) through this we can get json format data from client
- * app.use(express.urlencoded()) through this we can get data with urlencoded format
- * app.use(express.text()) through this we can get raw data from client
- */
+app.use(express.json());
+app.use(cookieParser());
 
-// let's learn about express.static
-// app.use(express.static(`${__dirname}/public`, {
-//     index: 'home.html'
-// }));
-
-// let's learn a little bit about express.Router() function
-const router = express.Router({
-    caseSensitive: true
+adminRoute.get('/dashboard', (req, res) => {
+    // console.log('Baseurl', req.originalUrl);
+    // console.log('url', req.url);
+    // console.log('path', req.path);
+    // console.log(req.hostname);
+    // console.log(req.ip);
+    console.log(req.method);
+    res.send('We are in admin dashboard');
 });
 
-app.use(router);
+app.use('/admin', adminRoute);
 
-router.get("/about", (req, res) => {
-    res.send("hello world this is get request");
-})
-
-// app.post("/", (req, res) => {
-//     console.log(req.body);
-//     res.send("hello world this is post request");
+// app.get('/user/:id', (req, res) => {
+    // console.log('Baseurl ', req.originalUrl);
+    // console.log('url ', req.url);
+    // console.log('path', req.path);
+    // console.log(req.hostname)
+    // console.log(req.ip);
+    // console.log(req.protocol);
+    // console.log(req.params);
+    // console.log(req.query);
+    // console.log(req.secure);
+    // res.send('Hello world');
 // })
 
-app.listen(3000, () => console.log('Server is running on port 3000'));
+app.get('/user/:id', handler);
+
+app.get('/about', (req, res) => {
+    // console.log('route', req.route);
+    console.log('accepts', req.accepts('json'));
+    res.send('Hello world');
+})
+
+app.post('/user', (req, res) => {
+    console.log(req.body);  // this is gonna return the body
+    res.send('Hello this is a post request');
+})
+
+app.listen(3000, () => {
+    console.log('listening to port 3000');
+})
