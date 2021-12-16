@@ -1,52 +1,47 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
-const handler = require('./handler');
 
 const app = express();
 
-const adminRoute = express.Router();
-
-app.use(express.json());
-app.use(cookieParser());
-
-adminRoute.get('/dashboard', (req, res) => {
-    // console.log('Baseurl', req.originalUrl);
-    // console.log('url', req.url);
-    // console.log('path', req.path);
-    // console.log(req.hostname);
-    // console.log(req.ip);
-    console.log(req.method);
-    res.send('We are in admin dashboard');
-});
-
-app.use('/admin', adminRoute);
-
-// app.get('/user/:id', (req, res) => {
-    // console.log('Baseurl ', req.originalUrl);
-    // console.log('url ', req.url);
-    // console.log('path', req.path);
-    // console.log(req.hostname)
-    // console.log(req.ip);
-    // console.log(req.protocol);
-    // console.log(req.params);
-    // console.log(req.query);
-    // console.log(req.secure);
-    // res.send('Hello world');
-// })
-
-app.get('/user/:id', handler);
+app.set('view engine', 'ejs');
 
 app.get('/about', (req, res) => {
-    // console.log('route', req.route);
-    console.log('accepts', req.accepts('json'));
-    res.send('Hello world');
-})
+    // res.send('About page')
+    // res.end()
+    // res.json({
+    //     name: 'Bangladesh',
+    // })
+    // res.status(200);
+    // res.end();
+    // res.sendStatus(400);
+    // res.format({
+    //     'text/plain': () => {
+    //         res.send('hi');
+    //     },
+    //     'text/html': () => {
+    //         res.render('pages/about', { name: 'Bangladesh' });
+    //     },
+    //     'application/json': () => {
+    //         res.json({
+    //             name: "Bangladesh",
+    //             message: "About",
+    //         })
+    //     },
+    //     default: () => {
+    //         res.status(406).send('Not acceptable');
+    //     }
+    // })
+    // res.cookie('name', 'learnwithsumit', {});
+    // res.location('/test');
+    // res.redirect('/test')
+    res.set('Title', 'platform/learnWithSumit')
+    console.log(res.get('Title'));
+    res.end();
+});
 
-app.post('/user', (req, res) => {
-    console.log(req.body);  // this is gonna return the body
-    res.send('Hello this is a post request');
-})
+app.get('/test', (req, res) => {
+    res.send('Hello');
+});
 
 app.listen(3000, () => {
-    console.log('listening to port 3000');
+    console.log('Listening to port 3000');
 })
