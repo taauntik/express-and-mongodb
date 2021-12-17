@@ -1,47 +1,47 @@
-const express = require('express');
+const cookieParser = require("cookie-parser");
+const express = require("express");
 
 const app = express();
 
-app.set('view engine', 'ejs');
+app.use(express.json());
+app.use(cookieParser());
+const adminRouter = express.Router();
 
-app.get('/about', (req, res) => {
-    // res.send('About page')
-    // res.end()
-    // res.json({
-    //     name: 'Bangladesh',
-    // })
-    // res.status(200);
-    // res.end();
-    // res.sendStatus(400);
-    // res.format({
-    //     'text/plain': () => {
-    //         res.send('hi');
-    //     },
-    //     'text/html': () => {
-    //         res.render('pages/about', { name: 'Bangladesh' });
-    //     },
-    //     'application/json': () => {
-    //         res.json({
-    //             name: "Bangladesh",
-    //             message: "About",
-    //         })
-    //     },
-    //     default: () => {
-    //         res.status(406).send('Not acceptable');
-    //     }
-    // })
-    // res.cookie('name', 'learnwithsumit', {});
-    // res.location('/test');
-    // res.redirect('/test')
-    res.set('Title', 'platform/learnWithSumit')
-    console.log(res.get('Title'));
-    res.end();
+adminRouter.get("/dashboard", (req, res) => {
+  res.send("Dashboard");
 });
 
-app.get('/test', (req, res) => {
-    res.send('Hello');
+const loggerWrapper = (options) => {
+  return (req, res, next) => {
+    if (options.log) {
+      console.log(
+        `${new Date(Date.now()).toLocaleString()} - ${req.method} ${
+          req.originalUrl
+        } - ${req.protocol} - ${req.ip}`
+      );
+      next();
+    }
+    throw new Error("Failed to log");
+  };
+};
+
+adminRouter.use(loggerWrapper({ log: false }));
+
+const errorMiddleWare = (err, req, res, next) => {
+    console.log(err.message);
+    res.status(500).send('There was a server side error');
+}
+
+app.use(errorMiddleWare)
+// app.use(cookieParser());
+// built in middleware
+
+app.use("/admin", adminRouter);
+
+app.get("/about", (req, res) => {
+  res.send("About");
 });
 
 app.listen(3000, () => {
-    console.log('Listening to port 3000');
-})
+  console.log("listening to port 3000");
+});
